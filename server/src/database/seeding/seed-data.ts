@@ -6,8 +6,6 @@ import { CreateOrganizationDto } from '../../organizations/dto/create-organizati
 import { CreateTransactionDto } from '../../transactions/dto/create-transaction.dto';
 import { AssetType, Condition } from '../../assets/constants';
 import { TransactionStatus } from '../../transactions/transaction-status.enum';
-import { CreateUserOrganizationDto } from '../../user-org/dto/create-user-org.dto';
-import { ApprovalStatus, Role } from '../../user-org/constants';
 
 const assetImg = 'https://optinmonster.com/wp-content/uploads/2019/09/nonprofit-newsletter.png';
 
@@ -24,6 +22,7 @@ export const seedUsers = (): CreateUserDto[] => {
       last_name: 'user2Last',
       email: 'user2First@example.com',
       password: 'Secret1234%',
+      organizations: [{ id: 1 }],
     },
   ];
   return users;
@@ -239,17 +238,4 @@ export const seedTransactions = (): CreateTransactionDto[] => {
     },
   ];
   return transactions;
-};
-
-export const seedUserOrganization = (): CreateUserOrganizationDto[] => {
-  const userOrganizations: CreateUserOrganizationDto[] = [
-    {
-      approvalStatus: ApprovalStatus.approved,
-      organization: null,
-      role: Role.owner,
-      user: null,
-    },
-  ];
-
-  return userOrganizations;
 };
