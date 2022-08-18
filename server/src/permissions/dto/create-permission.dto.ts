@@ -4,7 +4,7 @@ import { CreateUserDto } from '../../users/dto/create-user.dto';
 
 import { ApprovalStatus, Role } from '../constants';
 
-export class CreateUserOrganizationDto {
+export class CreatePermissionDto {
   @IsOptional()
   @IsEnum(ApprovalStatus)
   approvalStatus: ApprovalStatus;

@@ -6,7 +6,7 @@ import { CategoriesModule } from '../categories/categories.module';
 import { OrganizationsModule } from '../organizations/organizations.module';
 import { MessagesModule } from '../messages/messages.module';
 import { TransactionsModule } from '../transactions/transactions.module';
-import { UserOrganizationsModule } from '../user-org/user-org.module';
+import { PermissionsModule } from '../permissions/permissions.module';
 
 import { SeederService } from './seeder.service';
 import { DatabaseConnectionService } from '../database-connection.service';
@@ -31,7 +31,7 @@ const seederDbOptions: PostgresConnectionOptions = {
     OrganizationsModule,
     MessagesModule,
     TransactionsModule,
-    UserOrganizationsModule,
+    PermissionsModule,
   ],
   providers: [Logger, SeederService],
 })
@@ -60,7 +60,7 @@ export class SeederModule implements OnApplicationBootstrap {
       )
       .then((seedMessagesResult) => this.seederService.seedTransactionsAsync(seedMessagesResult))
       .then((seedTransactionsResult) =>
-        this.seederService.seedUserOrgAsync(seedTransactionsResult),
+        this.seederService.seedPermissionAsync(seedTransactionsResult),
       );
   }
 }

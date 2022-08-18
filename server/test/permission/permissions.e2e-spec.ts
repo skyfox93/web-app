@@ -7,20 +7,20 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TEST_DB_OPTIONS } from '../testing-constants';
 import { Organization } from '../../src/organizations/entities/organization.entity';
 import { CreateOrganizationDto } from '../../src/organizations/dto/create-organization.dto';
-import { UserOrganization } from '../../src/user-org/entities/user-org.entity';
-import { CreateUserOrganizationDto } from '../../src/user-org/dto/create-user-org.dto';
+import { Permission } from '../../src/permissions/entities/permission.entity';
+import { CreatePermissionDto } from '../../src/permissions/dto/create-permission.dto';
 import { CreateUserDto } from '../../src/users/dto/create-user.dto';
-import { UserOrganizationsModule } from '../../src/user-org/user-org.module';
-import { UserOrganizationsController } from '../../src/user-org/user-org.controller';
+import { PermissionsModule } from '../../src/permissions/permissions.module';
+import { PermissionsController } from '../../src/permissions/permissions.controller';
 import { User } from '../../src/users/entities/user.entity';
 
 import { StubGen } from '../stubs/stub-factory';
 import { UsersModule } from '../../src/users/users.module';
 import { OrganizationsModule } from '../../src/organizations/organizations.module';
 
-describe('UserOrgsController', () => {
+describe('PermissionsController', () => {
   let app: INestApplication;
-  let repository: Repository<UserOrganization>;
+  let repository: Repository<Permission>;
   let userRepository: Repository<User>;
   let orgRepository: Repository<Organization>;
 
@@ -28,26 +28,26 @@ describe('UserOrgsController', () => {
 
   const userSeed: CreateUserDto = StubGen.createUserDto();
 
-  const userOrg: CreateUserOrganizationDto = StubGen.createUserOrgDto(userSeed, orgSeed);
+  const permission: CreatePermissionDto = StubGen.createPermissionDto(userSeed, orgSeed);
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        UserOrganizationsModule,
+        PermissionsModule,
         TypeOrmModule.forRoot(TEST_DB_OPTIONS),
         UsersModule,
         OrganizationsModule,
       ],
-      controllers: [UserOrganizationsController],
+      controllers: [PermissionsController],
       providers: [
-        { provide: getRepositoryToken(UserOrganization), useClass: Repository },
+        { provide: getRepositoryToken(Permission), useClass: Repository },
         { provide: getRepositoryToken(Organization), useClass: Repository },
         { provide: getRepositoryToken(User), useClass: Repository },
       ],
     }).compile();
 
     app = module.createNestApplication();
-    repository = module.get(getRepositoryToken(UserOrganization));
+    repository = module.get(getRepositoryToken(Permission));
     userRepository = module.get(getRepositoryToken(User));
     orgRepository = module.get(getRepositoryToken(Organization));
     await app.init();
@@ -62,34 +62,34 @@ describe('UserOrgsController', () => {
       userRepository.createQueryBuilder().insert().into(User).values(userSeed).execute(),
       orgRepository.createQueryBuilder().insert().into(Organization).values(orgSeed).execute(),
     ]);
-    const savedUserOrg = repository
+    const savedPermission = repository
       .createQueryBuilder()
       .insert()
-      .into(UserOrganization)
+      .into(Permission)
       .values({
-        ...userOrg,
+        ...permission,
         user: { ...userSeed, id: savedUser.identifiers['id'] },
         organization: { ...orgSeed, id: savedOrg.identifiers['id'] },
       })
       .execute();
-    expect(savedUserOrg).not.toBeNull();
+    expect(savedPermission).not.toBeNull();
   });
 
   afterEach(async () => {
-    await repository.query(`TRUNCATE user_organizations CASCADE;`);
+    await repository.query(`TRUNCATE permissions CASCADE;`);
     await userRepository.query(`TRUNCATE users CASCADE;`);
     await orgRepository.query(`TRUNCATE organizations CASCADE;`);
   });
 
-  it('POST /userOrganizations -> when user exists should return 409', async () => {
+  it('POST /permissions -> when user exists should return 409', async () => {
     const requestBody = {
-      ...userOrg,
+      ...permission,
       user: { ...userSeed },
       organization: { ...orgSeed, name: 'Something else', ein: '01-1234567' },
     };
     const { body } = await supertest
       .agent(app.getHttpServer())
-      .post(`/userOrganizations`)
+      .post(`/permissions`)
       .send({ ...requestBody })
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)
@@ -97,16 +97,16 @@ describe('UserOrgsController', () => {
     expect(body.message).toEqual('Email already exists');
   });
 
-  it('POST /userOrganizations -> when ORG exists by name should return 409', async () => {
+  it('POST /permissions -> when ORG exists by name should return 409', async () => {
     const requestBody = {
-      ...userOrg,
+      ...permission,
       organization: { ...orgSeed, ein: '01-1234567' },
       user: { ...userSeed, email: 'anotheremail@test.com' },
     };
 
     const { body } = await supertest
       .agent(app.getHttpServer())
-      .post(`/userOrganizations`)
+      .post(`/permissions`)
       .send({ ...requestBody })
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)
@@ -114,16 +114,16 @@ describe('UserOrgsController', () => {
     expect(body.message).toEqual('This organization already exists');
   });
 
-  it('POST /userOrganizations -> when ORG exists by EIN should return 409', async () => {
+  it('POST /permissions -> when ORG exists by EIN should return 409', async () => {
     const requestBody = {
-      ...userOrg,
+      ...permission,
       organization: { ...orgSeed, name: 'anything' },
       user: { ...userSeed, email: 'anyrandomemail@test.com' },
     };
 
     const { body } = await supertest
       .agent(app.getHttpServer())
-      .post(`/userOrganizations`)
+      .post(`/permissions`)
       .send({ ...requestBody })
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)
@@ -131,9 +131,9 @@ describe('UserOrgsController', () => {
     expect(body.message).toEqual('This organization already exists');
   });
 
-  it('POST /userOrganizations -> when unique, should return 201', async () => {
+  it('POST /permissions -> when unique, should return 201', async () => {
     const requestBody = {
-      ...userOrg,
+      ...permission,
       user: { ...userSeed, email: 'somethingelse@no.com' },
       organization: {
         ...orgSeed,
@@ -144,7 +144,7 @@ describe('UserOrgsController', () => {
 
     const { body } = await supertest
       .agent(app.getHttpServer())
-      .post(`/userOrganizations`)
+      .post(`/permissions`)
       .send({ ...requestBody })
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)

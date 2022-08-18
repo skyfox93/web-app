@@ -13,7 +13,7 @@ import { UsersModule } from './users/users.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { CategoriesModule } from './categories/categories.module';
-import { UserOrganizationsModule } from './user-org/user-org.module';
+import { PermissionsModule } from './permissions/permissions.module';
 import { PocChatModule } from './poc-chat/poc-chat.module';
 
 @Module({
@@ -31,7 +31,7 @@ import { PocChatModule } from './poc-chat/poc-chat.module';
     OrganizationsModule,
     UsersModule,
     CategoriesModule,
-    UserOrganizationsModule,
+    PermissionsModule,
     TransactionsModule,
     PocChatModule,
   ],

@@ -1,8 +1,8 @@
 import { CreateUserDto } from '../../src/users/dto/create-user.dto';
 import { faker } from '@faker-js/faker';
 import { CreateOrganizationDto } from '../../src/organizations/dto/create-organization.dto';
-import { CreateUserOrganizationDto } from '../../src/user-org/dto/create-user-org.dto';
-import { ApprovalStatus, Role } from '../../src/user-org/constants';
+import { CreatePermissionDto } from '../../src/permissions/dto/create-permission.dto';
+import { ApprovalStatus, Role } from '../../src/permissions/constants';
 
 /**
  * Generates stubs using a faker library
@@ -39,10 +39,10 @@ export class StubGen {
     };
   }
 
-  public static createUserOrgDto(
+  public static createPermissionDto(
     createUserDto: CreateUserDto,
     createOrgDto: CreateOrganizationDto,
-  ): CreateUserOrganizationDto {
+  ): CreatePermissionDto {
     return {
       role: Role.owner,
       approvalStatus: ApprovalStatus.approved,

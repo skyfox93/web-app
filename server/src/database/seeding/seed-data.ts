@@ -6,8 +6,8 @@ import { CreateOrganizationDto } from '../../organizations/dto/create-organizati
 import { CreateTransactionDto } from '../../transactions/dto/create-transaction.dto';
 import { AssetType, Condition } from '../../assets/constants';
 import { TransactionStatus } from '../../transactions/transaction-status.enum';
-import { CreateUserOrganizationDto } from '../../user-org/dto/create-user-org.dto';
-import { ApprovalStatus, Role } from '../../user-org/constants';
+import { CreatePermissionDto } from '../../permissions/dto/create-permission.dto';
+import { ApprovalStatus, Role } from '../../permissions/constants';
 
 const assetImg = 'https://optinmonster.com/wp-content/uploads/2019/09/nonprofit-newsletter.png';
 
@@ -241,8 +241,8 @@ export const seedTransactions = (): CreateTransactionDto[] => {
   return transactions;
 };
 
-export const seedUserOrganization = (): CreateUserOrganizationDto[] => {
-  const userOrganizations: CreateUserOrganizationDto[] = [
+export const seedPermission = (): CreatePermissionDto[] => {
+  const permissions: CreatePermissionDto[] = [
     {
       approvalStatus: ApprovalStatus.approved,
       organization: null,
@@ -251,5 +251,5 @@ export const seedUserOrganization = (): CreateUserOrganizationDto[] => {
     },
   ];
 
-  return userOrganizations;
+  return permissions;
 };

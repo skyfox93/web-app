@@ -5,7 +5,7 @@ import { FormData } from './FormData';
 export const httpPostNonprofitSignup = (data: FormData): Promise<AxiosResponse<any, any>> => {
   const user = toUser(data);
   const organization = toOrg(data);
-  const api = new URL(`http://localhost:3001/api/userOrganizations`);
+  const api = new URL(`http://localhost:3001/api/permissions`);
   return axios.post(api.href, { organization, user });
 };
 

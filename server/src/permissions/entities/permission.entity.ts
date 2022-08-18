@@ -1,18 +1,11 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm';
 
 import { Organization } from '../../organizations/entities/organization.entity';
 import { User } from '../../users/entities/user.entity';
 import { ApprovalStatus, Role } from '../constants';
 
-@Entity('user_organizations')
-export class UserOrganization {
+@Entity('permissions')
+export class Permission {
   @PrimaryGeneratedColumn()
   id: number;
 

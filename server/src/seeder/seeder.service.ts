@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, EntityMetadata, Repository } from 'typeorm';
 
-import { seedUserOrganization, seedUsers } from '../database/seeding/seed-data';
+import { seedPermission, seedUsers } from '../database/seeding/seed-data';
 import { seedAssets } from '../database/seeding/seed-data';
 import { seedCategories } from '../database/seeding/seed-data';
 import { seedMessages } from '../database/seeding/seed-data';
@@ -12,14 +12,14 @@ import { Asset } from '../assets/entities/asset.entity';
 import { Message } from '../messages/entities/message.entity';
 import { Transaction } from '../transactions/entities/transaction.entity';
 import { Organization } from '../organizations/entities/organization.entity';
-import { UserOrganization } from '../user-org/entities/user-org.entity';
+import { Permission } from '../permissions/entities/permission.entity';
 import { UsersService } from '../users/users.service';
 import { AssetsService } from '../assets/assets.service';
 import { CategoriesService } from '../categories/categories.service';
 import { MessagesService } from '../messages/messages.service';
 import { OrganizationsService } from '../organizations/organizations.service';
 import { TransactionsService } from '../transactions/transactions.service';
-import { UserOrganizationsService } from '../user-org/user-org.service';
+import { PermissionsService } from '../permissions/permissions.service';
 import { TransactionStatus } from '../transactions/transaction-status.enum';
 import { CreateTransactionDto } from '../transactions/dto/create-transaction.dto';
 import { CreateMessageDto } from '../messages/dto/create-message.dto';
@@ -41,8 +41,8 @@ export interface SeedMessagesResult extends SeedOrganizationsResult {
 export interface SeedTransactionsResult extends SeedMessagesResult {
   transactions: Transaction[];
 }
-export interface SeedUserOrgResult extends SeedTransactionsResult {
-  userOrgs: UserOrganization[];
+export interface SeedPermissionResult extends SeedTransactionsResult {
+  permissions: Permission[];
 }
 
 @Injectable()
@@ -54,7 +54,7 @@ export class SeederService {
     private readonly organizationService: OrganizationsService,
     private readonly messageService: MessagesService,
     private readonly transactionService: TransactionsService,
-    private readonly userorgService: UserOrganizationsService,
+    private readonly permissionService: PermissionsService,
     private readonly connx: DataSource,
   ) {}
 
@@ -198,23 +198,23 @@ export class SeederService {
     };
   }
 
-  public async seedUserOrgAsync(
+  public async seedPermissionAsync(
     seedTransactionsResult: SeedTransactionsResult,
-  ): Promise<SeedUserOrgResult> {
-    Logger.log('Seeding UserOrganizations', SeederService.name);
+  ): Promise<SeedPermissionResult> {
+    Logger.log('Seeding Permissions', SeederService.name);
 
-    const userOrgs = seedUserOrganization();
-    const newUserOrgs = [];
-    for (const userOrg of userOrgs) {
-      Logger.log('Seeding UserOrg', SeederService.name);
-      userOrg.organization = seedTransactionsResult.organizations[0];
-      userOrg.user = seedTransactionsResult.users[0];
-      await this.userorgService.create(userOrg).catch((err) => Logger.log(err));
+    const permissions = seedPermission();
+    const newPermissions = [];
+    for (const permission of permissions) {
+      Logger.log('Seeding Permissions', SeederService.name);
+      permission.organization = seedTransactionsResult.organizations[0];
+      permission.user = seedTransactionsResult.users[0];
+      await this.permissionService.create(permission).catch((err) => Logger.log(err));
     }
-    Logger.log('End of seeding UserOrganizations', SeederService.name);
+    Logger.log('End of seeding Permissions', SeederService.name);
     return {
       ...seedTransactionsResult,
-      userOrgs: newUserOrgs,
+      permissions: newPermissions,
     };
   }
 

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm';
 
-import { UserOrganization } from '../../user-org/entities/user-org.entity';
+import { Permission } from '../../permissions/entities/permission.entity';
 import { Asset } from '../../assets/entities/asset.entity';
 import { Message } from '../../messages/entities/message.entity';
 import { Transaction } from '../../transactions/entities/transaction.entity';
@@ -31,6 +31,6 @@ export class User {
   @OneToMany(() => Message, (message) => message.user)
   messages: Message[];
 
-  @OneToMany(() => UserOrganization, (user_org) => user_org.user)
-  organizations: UserOrganization[];
+  @OneToMany(() => Permission, (permission) => permission.user)
+  organizations: Permission[];
 }
