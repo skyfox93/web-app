@@ -1,7 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+  JoinColumn,
+} from 'typeorm';
 
 import { Permission } from '../../permissions/entities/permission.entity';
 import { Transaction } from '../../transactions/entities/transaction.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('organizations')
 export class Organization {
@@ -39,7 +48,7 @@ export class Organization {
   nonprofit_classification: string;
 
   @OneToMany(() => Permission, (permission) => permission.organization)
-  users: Permission[];
+  permissions!: Permission[];
 
   @OneToMany(
     () => Transaction,

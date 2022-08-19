@@ -16,17 +16,17 @@ export class Permission {
   })
   approvalStatus: ApprovalStatus;
 
-  @ManyToOne(() => Organization, (org) => org.users, { eager: true })
-  organization!: Organization;
-
   @Column({
     type: 'enum',
     enum: Role,
-    default: Role.admin,
+    default: Role.owner,
   })
   role: Role;
 
-  @ManyToOne(() => User, (user) => user.organizations, { eager: true })
+  @ManyToOne(() => Organization, (org) => org.permissions, { cascade: ['insert'], eager: true })
+  organization!: Organization;
+
+  @ManyToOne(() => User, (user) => user.permissions, { cascade: ['insert'], eager: true })
   user!: User;
 
   @CreateDateColumn()

@@ -10,7 +10,7 @@ export interface FormData {
   phone: string;
   nonprofit_classification: string;
   firstName: string;
-  last_name: string;
+  lastName: string;
   email: string;
   password: string;
   confirmPassword: string;

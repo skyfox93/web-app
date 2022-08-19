@@ -1,4 +1,15 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreatePermissionDto } from './create-permission.dto';
+import { IsEnum, IsOptional } from 'class-validator';
 
-export class UpdatePermissionDto extends PartialType(CreatePermissionDto) {}
+import { CreatePermissionDto } from './create-permission.dto';
+import { ApprovalStatus, Role } from '../constants';
+
+export class UpdatePermissionDto {
+  @IsOptional()
+  @IsEnum(ApprovalStatus)
+  approvalStatus: ApprovalStatus;
+
+  @IsOptional()
+  @IsEnum(Role)
+  role: Role;
+}

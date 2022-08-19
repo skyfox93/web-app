@@ -2,13 +2,13 @@ import { FormData } from './FormData';
 
 export const toUser = (
   formData: FormData,
-): { email: string; password: string; firstName: string; last_name: string } => {
-  const { email, password, firstName, last_name } = formData;
+): { email: string; password: string; firstName: string; lastName: string } => {
+  const { email, password, firstName, lastName } = formData;
   return {
     email,
     password,
     firstName,
-    last_name,
+    lastName,
   };
 };
 

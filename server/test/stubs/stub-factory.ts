@@ -15,7 +15,7 @@ export class StubGen {
   public static createUserDto(): CreateUserDto {
     return {
       firstName: faker.name.firstName(),
-      last_name: faker.name.lastName(),
+      lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: 'Secret1234%',
     };

@@ -46,7 +46,7 @@ const defaultOrg: FormData = {
   phone: '',
   nonprofit_classification: '',
   firstName: '',
-  last_name: '',
+  lastName: '',
   email: '',
   password: '',
   confirmPassword: '',
@@ -459,7 +459,7 @@ export const SignUpUserAndNonprofit = () => {
                   </Grid>
                   <Grid item md={6} xs={12}>
                     <Controller
-                      name="last_name"
+                      name="lastName"
                       control={control}
                       defaultValue={''}
                       render={({ field }) => (
@@ -467,8 +467,8 @@ export const SignUpUserAndNonprofit = () => {
                           {...field}
                           label="Last Name"
                           placeholder="Last Name"
-                          error={!!errors.last_name}
-                          helperText={errors.last_name ? errors.last_name.message : ''}
+                          error={!!errors.lastName}
+                          helperText={errors.lastName ? errors.lastName.message : ''}
                         />
                       )}
                     />

@@ -16,9 +16,10 @@ import { Permission } from './entities/permission.entity';
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
-import { ApprovalStatus, Role } from './constants';
 import { UsersService } from '../users/users.service';
 import { OrganizationsService } from '../organizations/organizations.service';
+import { Organization } from '../organizations/entities/organization.entity';
+import { User } from '../users/entities/user.entity';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -30,38 +31,21 @@ export class PermissionsController {
 
   @Post()
   async create(@Body() createPermissionsDto: CreatePermissionDto): Promise<Permission> {
-    if (await this.userService.userEmailExists(createPermissionsDto.user.email)) {
-      throw new HttpException(
-        { status: HttpStatus.CONFLICT, message: 'Email already exists' },
-        HttpStatus.CONFLICT,
-      );
-    }
-
     if (
-      (await this.orgService.countByNameOrEin(
-        createPermissionsDto.organization.name,
-        createPermissionsDto.organization.ein,
-      )) > 0
+      createPermissionsDto.user.hasOwnProperty('id') &&
+      createPermissionsDto.organization.hasOwnProperty('id') &&
+      this.permissionsService.findBy(
+        createPermissionsDto.user as User,
+        createPermissionsDto.organization as Organization,
+      )
     ) {
       throw new HttpException(
-        { status: HttpStatus.CONFLICT, message: 'This organization already exists' },
-        HttpStatus.CONFLICT,
+        { staus: HttpStatus.NOT_FOUND, message: 'permission already exists, try PATCH' },
+        HttpStatus.NOT_FOUND,
       );
     }
 
-    try {
-      const permission = await this.permissionsService.create({
-        ...createPermissionsDto,
-        role: Role.owner,
-        approvalStatus: ApprovalStatus.pending,
-      });
-      return permission;
-    } catch (error) {
-      throw new HttpException(
-        { status: HttpStatus.INTERNAL_SERVER_ERROR },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return await this.permissionsService.create(createPermissionsDto);
   }
 
   @Get(':id')

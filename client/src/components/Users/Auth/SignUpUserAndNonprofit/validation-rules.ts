@@ -25,7 +25,7 @@ export const validationSchema = Yup.object().shape({
     .not(['Select classification'])
     .oneOf(Object.values(classifications.map((x) => x.text))),
   firstName: Yup.string().required('Required'),
-  last_name: Yup.string().required('Required'),
+  lastName: Yup.string().required('Required'),
   role_or_title: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string()
