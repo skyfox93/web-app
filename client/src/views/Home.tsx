@@ -191,6 +191,7 @@ function Home(): JSX.Element {
           <Typography className={classes.heroText} variant="h3" component="h1" color="textPrimary">
             Support local nonprofits through the giving economy.
           </Typography>
+          givingful is going to be awesome
           <div className={classes.searchBar}>
             <FormControl className={classes.formControl}>
               <Select
