@@ -6,6 +6,8 @@ import Paper from '@mui/material/Paper';
 import makeStyles from '@mui/styles/makeStyles';
 import type { Theme } from '@mui/material/styles';
 
+import type { Asset, User } from '../types';
+
 const useStyles = makeStyles((theme: Theme) => ({
   topBanner: {
     display: 'flex',
@@ -38,13 +40,15 @@ type Temp = {
 type CarouselProps = {
   cardGroups: Array<Temp[]>;
   label: string;
+  requestsInfo: Array<Asset>;
 };
 
 function Carousel(props: CarouselProps) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState<number>(0);
 
-  const { cardGroups, label } = props;
+  const { cardGroups, label, requestsInfo } = props;
+
   const maxSteps = cardGroups.length;
 
   const handleNext = () => {
@@ -53,6 +57,7 @@ function Carousel(props: CarouselProps) {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+
   return (
     <div className={classes.carouselWrapper}>
       <div className={classes.topBanner}>
@@ -109,9 +114,9 @@ function Carousel(props: CarouselProps) {
         </div>
       </div>
       <div className={classes.carouselContent}>
-        {cardGroups[activeStep].map((card) => (
+        {/* {requestsInfo[activeStep].map((card) => (
           <img key={card.imgPath} src={card.imgPath} alt={card.label} />
-        ))}
+        ))} */}
       </div>
     </div>
   );

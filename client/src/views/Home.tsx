@@ -216,7 +216,7 @@ function Home(): JSX.Element {
       .then((data: Asset[]) => {
         setDonations(data);
       });
-    fetch('http://localhost:3001/api/assets?type=request&limit=3&offset=0')
+    fetch('http://localhost:3001/api/assets?type=request&limit=10&offset=0')
       .then((resp) => resp.json())
       .then((data: Asset[]) => {
         setRequests(data);
@@ -258,7 +258,11 @@ function Home(): JSX.Element {
           vestibulum consequat.
         </Typography>
       </div>
-      <Carousel label={'Recent Needs From Nonprofits'} cardGroups={carouselSteps} />
+      <Carousel
+        label={'Recent Needs From Nonprofits'}
+        requestsInfo={requests}
+        cardGroups={carouselSteps}
+      />
       <div className={classes.faqs}>
         <Typography variant="h4" component="h4" className={classes.faqsHeader}>
           FAQs
